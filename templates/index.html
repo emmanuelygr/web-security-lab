@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Security Testing Lab</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }
+        h1 { color: #333; }
+        h2 { color: #0056b3; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+        .box { background: #f9f9f9; padding: 15px; border: 1px solid #ddd; margin-bottom: 20px; }
+        .danger { border-left: 5px solid red; }
+        .secure { border-left: 5px solid green; }
+        code { background: #eee; padding: 2px 4px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+
+    <h1>Web Security Testing Lab</h1>
+    <p>Welcome! This application is deliberately designed to demonstrate common web vulnerabilities and security concepts.</p>
+    
+    <div class="box">
+        <h3>HTTP Request Info</h3>
+        <p><strong>Your User-Agent:</strong> <code>{{ user_agent }}</code></p>
+        <p>The User-Agent is an HTTP header sent by your browser to identify itself to the server.</p>
+    </div>
+
+    <h2>1. Cross-Site Scripting (XSS)</h2>
+    <p>XSS occurs when an application includes untrusted data in a web page without proper validation or escaping.</p>
+
+    <div class="box danger">
+        <h3>Vulnerable Search (Reflected XSS)</h3>
+        <p>Try entering: <code>&lt;script&gt;alert('Hacked!');&lt;/script&gt;</code> or <code>&lt;img src=x onerror=alert(1)&gt;</code></p>
+        <form action="/search_vulnerable" method="GET">
+            <input type="text" name="q" placeholder="Enter search query..." size="40">
+            <button type="submit">Search (Vulnerable)</button>
+        </form>
+    </div>
+
+    <div class="box secure">
+        <h3>Secure Search</h3>
+        <p>Try entering the same payload here. It will be safely HTML-escaped.</p>
+        <form action="/search_secure" method="GET">
+            <input type="text" name="q" placeholder="Enter search query..." size="40">
+            <button type="submit">Search (Secure)</button>
+        </form>
+    </div>
+
+    <h2>2. Cookies and Sessions</h2>
+    <div class="box">
+        <p>Cookies are used to maintain state across HTTP requests. They can be stolen via XSS if not configured correctly (e.g., missing the HttpOnly flag).</p>
+        <p><a href="/set_cookie">Click here to set a vulnerable dummy cookie</a></p>
+        <p><em>(After clicking, open your browser's Developer Tools -> Application -> Cookies to see it. Note that HttpOnly is false, meaning the XSS attack above could steal it via <code>document.cookie</code>)</em></p>
+    </div>
+
+    <h2>3. Authentication & Authorization</h2>
+    <div class="box">
+        <p>This demonstrates HTTP Basic Authentication.</p>
+        <p><a href="/admin">Access Admin Panel</a></p>
+        <p><strong>Credentials:</strong> Username: <code>admin</code> | Password: <code>secret</code></p>
+    </div>
+
+</body>
+</html>
